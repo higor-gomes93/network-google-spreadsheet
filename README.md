@@ -8,6 +8,8 @@ Para testar, basta acessar o link abaixo, criar uma cópia, e clicar no botão "
 
 Link para a planilha exemplo: https://docs.google.com/spreadsheets/d/1w6DhXZwvRJgbQOXG1anW13ImxLhmGN7TRJQjwzzuSzI/edit#gid=0
 
+Observação: você precisa utilizar o Google Chrome como navegador, e estar logado com a mesma conta no browser e no G Suite.
+
 
 # [EN-US] Graphs in Google Sheets
 This algorithm is intended to generate a graph within the Google Sheets interface, consisting of 3 files:
@@ -18,3 +20,5 @@ This algorithm is intended to generate a graph within the Google Sheets interfac
 To try it out, just go to the link below, create a copy, and click on the "Network" button. The first time, you will be asked for some permissions (from Google itself). After granting them, just click on "Network" again.
 
 Link to example spreadsheet: https://docs.google.com/spreadsheets/d/1w6DhXZwvRJgbQOXG1anW13ImxLhmGN7TRJQjwzzuSzI/edit#gid=0
+
+Note: You need to use Google Chrome as your browser, and be logged in with the same browser and G Suite account.
