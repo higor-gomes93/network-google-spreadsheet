@@ -8,6 +8,12 @@
     <script src="https://unpkg.com/layout-base/layout-base.js"></script>
     <script src="https://unpkg.com/cose-base/cose-base.js"></script>
     <script src="cytoscape-cose-bilkent.js"></script>
+    <script src="https://unpkg.com/popper.js@1.14.7/dist/umd/popper.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/cytoscape-popper@1.0.4/cytoscape-popper.min.js"></script>
+    <script src="https://unpkg.com/tippy.js@4.0.1/umd/index.all.min.js"></script>
+    <script src="https://unpkg.com/layout-base/layout-base.js"></script>
+    <script src="https://unpkg.com/cose-base/cose-base.js"></script>
+    <script src="cytoscape-cose-bilkent.js"></script>
 </head>
 <style>
     #cy {
@@ -22,7 +28,7 @@
     <div id="cy"></div>
     <script>
       google.script.run.withSuccessHandler(printRet).withFailureHandler(printRet).pegador();
-      
+
       function printRet(ret){
         var data = JSON.parse(JSON.stringify(ret));
         
@@ -38,36 +44,106 @@
               style: {
                 'width': 20,
                 'height': 20,
-                'background-color': '#666',
-                'label': 'data(id)',
-                'text-valign': 'center',
-                'font-size': 8,
-                'text-background-color': '#1b1b1b',
-                'text-background-opacity': 0,
-                'text-background-shape': 'rectangle',
-                'text-background-padding': '10px'
+                'border-width': '2px',
+                //'border-color': '#262626',
+                'border-opacity': 0.5,
+                //'background-color': '#666',
+                //'label': 'data(id)',
+                //'text-valign': 'center',
+                //'font-size': 8,
+                //'text-background-color': '#1b1b1b',
+                //'text-background-opacity': 0,
+                //'text-background-shape': 'rectangle',
+                //'text-background-padding': '10px'
               }
             },
 
             {
               selector: 'edge',
               style: {
-                'width': 3,
+                'width': 1,
                 'line-color': '#ccc',
-                'target-arrow-color': '#ccc',
-                'target-arrow-shape': 'triangle',
+                //'target-arrow-color': '#ccc',
+                //'target-arrow-shape': 'triangle',
                 'curve-style': 'bezier'
               }
+
+            },
+
+            {
+              selector: 'node.highlight',
+              style: {
+                  'border-color': '#FFF',
+                  'border-width': '2px'
+              }
+            },
+
+            {
+              selector: 'node.semitransp',
+              style:{ 'opacity': '0.1' }
+            },
+
+            {
+              selector: 'edge.highlight',
+              style: { 'mid-target-arrow-color': '#FFF' }
+            },
+
+            {
+              selector: 'edge.semitransp',
+              style:{ 'opacity': '0.1' }
             }
           ],
 
           layout: {
-            name: 'fcose',
+            name: 'cose',
+            randomize: true,
             quality: "default",
-            nodeSeparation: 100,
+            idealEdgeLength: 5,
+            //padding: 1,
+            //animate: false,
+            //nodeRepulsion: function( node ){ return 2048; },
             fit: true,
-            gravity: 50
+            //gravity: 0.5
           }
+        });
+
+        function makePopper(ele) {
+          let ref = ele.popperRef(); // used only for positioning
+
+          ele.tippy = tippy(ref, { // tippy options:
+            content: () => {
+              let content = document.createElement('div');
+
+              content.innerHTML = ele.id();
+
+              return content;
+            },
+            trigger: 'manual' // probably want manual mode
+          });
+        }
+
+        cy.ready(function() {
+          cy.elements().forEach(function(ele) {
+            makePopper(ele);
+          });
+        });
+
+        cy.elements().unbind('mouseover');
+        cy.elements().bind('mouseover', (event) => event.target.tippy.show());
+
+        cy.elements().unbind('mouseout');
+        cy.elements().bind('mouseout', (event) => event.target.tippy.hide());
+
+        cy.on('mouseover', 'node', function(e){
+          var sel = e.target;
+          cy.elements().difference(sel.outgoers()).not(sel).addClass('semitransp');
+          sel.addClass('highlight').outgoers().addClass('highlight');
+        });
+
+        cy.on('mouseout', 'node', function(e){
+          var sel = e.target;
+          cy.elements().removeClass('semitransp');
+          sel.removeClass('highlight').outgoers().removeClass('highlight');
         });
       }
     </script> 
